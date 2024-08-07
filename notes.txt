@@ -29,4 +29,16 @@ EVENT MANAGEMENT (REST API)
             
             ->Kernel.php
                 --> defines some common middleware classes that are apply to all request
-                --> they are configure-able
+                --> they are configure-able, different application have different requirement
+                --> api stateless instead the have token
+
+    2. Seeding Data for the REST API
+        -> Factories
+            --> responsible for setting up specific model go to database factories folder
+            --> php artisan make:factory factoryName --model=modelName
+            --> implement definition method
+                ---> return an array from it keys of the array are the column and value are for value
+
+        -> Seeder
+            --> take action of loading specific data into database or seeder folder
+            --> php artisan make:seeder factorySeeder 

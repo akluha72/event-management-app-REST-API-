@@ -1,0 +1,32 @@
+EVENT MANAGEMENT (REST API)
+    1. Creating the REST API Project setup
+        -> php artisan make:controller Api/{controllerName} --api = create resource controller 
+        -> php artisan make:model {modelName} -m = to create the model and migration file
+        -> CLI command
+            -> touch notes.txt
+
+        a. Create a relationship and decide data structure in the application
+            -> one to many relationshiop between user and events (user can owner of an event)
+                -> user own events
+                -> $table->foreignIdFor(User::class); = create both column that hold the relationship and add foreignkey for the column
+        
+        b. Adding relationship inside model
+            -> Since all the models are in the same namespaces so you don't have to import those classes 
+
+        c. Create a route
+            -> Route::apiResource('events.attendess', AttendeeController::class)->scoped(['attendee'=>'event']);
+            -> Attendee are not independent
+            -> Attendee route are part of event, don't exist on its own
+                --> Scoped controller
+                    ---> attendees resources will always part of event 
+                    ---> will have both parameters for event and attendess 
+                    ---> Check the route for better understanding
+
+        d. Why declaration in routes/api.php ????
+            -> RouteServiceProvider
+                --> Provider classes = setup laravel application, what to do and how to behave
+                --> because it already setup in RouteServiceProvider
+            
+            ->Kernel.php
+                --> defines some common middleware classes that are apply to all request
+                --> they are configure-able

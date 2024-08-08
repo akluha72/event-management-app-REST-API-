@@ -63,5 +63,10 @@ EVENT MANAGEMENT (REST API)
             --> status 422 (error status code laravel)
             --> using json body always use double qouted "" not single qouted ''
 
-    5. Update and delete data
-        -> 
+    5. API resources - Controlling json responsible
+        -> a way to customize how our data from eloqeunt transform to json responses
+        -> toJson is laravel function
+
+        -> return this type
+            -->return EventResource::collection(Event::all()); = it will return in array. 
+            -> 

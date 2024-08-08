@@ -14,7 +14,7 @@ class AttendeeController extends Controller
 
     public function index(Event $event)
     {
-        $attendees = $event->attendee()->latest();
+        $attendees = $event->attendees()->latest();
 
         return AttendeeResource::collection(
             $attendees->paginate()
@@ -24,7 +24,7 @@ class AttendeeController extends Controller
 
     public function store(Request $request, Event $event)
     {
-        $attendee = $event->attendee()->create([
+        $attendee = $event->attendees()->create([
             'user_id' => 1
         ]);
 

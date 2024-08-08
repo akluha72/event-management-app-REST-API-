@@ -43,7 +43,7 @@ class EventController extends Controller
     public function show(Event $event)
     {
         // return EventResource::collection($event);
-        $event->load('user','attendee');
+        $event->load('user','attendees');
         return new EventResource($event);
         // return $event;
     }

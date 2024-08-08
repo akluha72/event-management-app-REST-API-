@@ -9,31 +9,32 @@ use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 
 trait CanLoadRelationships
 {
-    public function loadRelationship(
-        Model|QueryBuilder|EloquentBuilder|HasMany $for,
-        ?array $relations = null
-        ): Model|QueryBuilder|EloquentBuilder|HasMany {
-        $relations = $relations ?? $this->relations ?? [];
-        foreach ($relations as $relation) {
-            $for->when(
-                $this->shouldIncludeRelation($relation),
-                fn($q) => $for instanceof Model ? $for->load($relation): $q->with($relation)
-            );
-        }
+  public function loadRelationships(
+    Model|QueryBuilder|EloquentBuilder|HasMany $for,
+    ?array $relations = null
+  ): Model|QueryBuilder|EloquentBuilder|HasMany {
+    $relations = $relations ?? $this->relations ?? [];
 
-        return $for;
+    foreach ($relations as $relation) {
+      $for->when(
+        $this->shouldIncludeRelation($relation),
+        fn($q) => $for instanceof Model ? $for->load($relation) : $q->with($relation)
+      );
     }
 
-    protected function shouldIncludeRelation(string $relation): bool
-    {
-        $include = request()->query('include');
+    return $for;
+  }
 
-        if (!$include) {
-            return false;
-        }
+  protected function shouldIncludeRelation(string $relation): bool
+  {
+    $include = request()->query('include');
 
-        $relations = array_map('trim', explode(',', $include));
-
-        return in_array($relation, $relations);
+    if (!$include) {
+      return false;
     }
+
+    $relations = array_map('trim', explode(',', $include));
+
+    return in_array($relation, $relations);
+  }
 }

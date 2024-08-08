@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\EventResource;
-use App\Http\Traits\CanLoadRelationship;
 use App\Http\Traits\CanLoadRelationships;
 use Illuminate\Http\Request;
 
@@ -16,11 +15,16 @@ class EventController extends Controller
 
     private array $relations = ['user', 'attendees', 'attendees.user'];
 
+    public function __construct()
+    {
+        $this->middleware('auth:sanctum')->except(['index','show']);
+
+    }
+
     public function index()
     {
         $query = $this->loadRelationship(Event::query());
 
-        // $this->shouldIncludeRelation('user');
         return EventResource::collection(
             $query->latest()->paginate()
         );
@@ -28,23 +32,25 @@ class EventController extends Controller
 
     public function store(Request $request)
     {
-
         $event = Event::create([
             ...$request->validate([
                 'name' => 'required|string|max:255',
-                'description' => 'nullable|string|',
+                'description' => 'nullable|string',
                 'start_time' => 'required|date',
-                'end_time' => 'required|date|after:start_time',
+                'end_time' => 'required|date|after:start_time'
             ]),
-            'user_id' => 1
+            'user_id' => $request->user()->id
         ]);
 
-        return new EventResource($event);
+        return new EventResource($this->loadRelationships($event));
     }
+
 
     public function show(Event $event)
     {
-        return new EventResource($this->loadRelationship($event));
+        return new EventResource(
+            $this->loadRelationship($event)
+        );
     }
 
     public function update(Request $request, Event $event)
@@ -60,9 +66,7 @@ class EventController extends Controller
         return new EventResource($this->loadRelationship($event));
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+
     public function destroy(Event $event)
     {
         $event->delete();
